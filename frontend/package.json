@@ -15,6 +15,7 @@
     "axios": "^0.20.0",
     "date-fns": "^2.16.0",
     "gatsby": "^2.24.51",
+    "gatsby-plugin-manifest": "^2.4.26",
     "gatsby-plugin-scss-typescript": "^4.0.13",
     "react-dom": "^16.13.1",
     "react-query": "^2.12.1",
