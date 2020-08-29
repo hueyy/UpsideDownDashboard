@@ -1,0 +1,33 @@
+@import './core.scss';
+
+* {
+  font-family: $default-font;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+.container {
+  max-width: 30rem;
+  width: 100%;
+  margin: 0 auto;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  box-sizing: border-box;
+}

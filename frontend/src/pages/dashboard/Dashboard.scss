@@ -1,0 +1,54 @@
+.dashboard-page {
+  padding: 2rem;
+
+  .label {
+    font-size: 0.8rem;
+  }
+
+  > .aggregate-data {
+    > .current {
+      > p:nth-of-type(2) {
+        font-size: 2rem;
+      }
+
+      margin-bottom: 1rem;
+    }
+
+    > .historical-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: 0.5rem;
+  
+      > div {
+        > p:nth-of-type(2) {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  > .breakdown {
+    margin-top: 2rem;
+    > .inverter {
+      > .header {
+        margin-bottom: 0.5rem;
+      }
+
+      > .data {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 0.5rem;
+
+        > div {
+          > p:nth-of-type(2) {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+
+    > .inverter + .inverter {
+      margin-top: 1.5rem;
+    }
+  }
+}

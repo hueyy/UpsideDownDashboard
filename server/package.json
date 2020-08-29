@@ -1,0 +1,41 @@
+{
+  "name": "upsidedown-dashboard-server",
+  "version": "1.0.0",
+  "description": "",
+  "license": "GNU GPLv3 ",
+  "author": "Huey <hello@huey.xyz>",
+  "main": "index.js",
+  "scripts": {
+    "babel-node": "babel-node -r dotenv/config src/server.ts --extensions \".ts\"",
+    "build": "babel src -d dist --extensions \".ts\" --copy-files --source-maps",
+    "start:dev": "nodemon -e ts --ignore __tests__ --exec npm run babel-node",
+    "start:prod": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "fastify": "^3.3.0",
+    "fastify-cors": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.4",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/node": "^14.6.1",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.7.0",
+    "eslint-plugin-disable": "^2.0.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-no-secrets": "^0.6.8",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "nodemon": "^2.0.4",
+    "typescript": "^4.0.2"
+  }
+}
