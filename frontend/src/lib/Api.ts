@@ -2,7 +2,7 @@ import axios from 'axios'
 import { EnvironmentVariables } from './Constants'
 
 export interface EnergyData {
-  unit: `Wh` | `W`
+  unit: `kWh` | `kW`
   value: number
 }
 

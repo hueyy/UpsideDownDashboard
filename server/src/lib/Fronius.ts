@@ -5,25 +5,25 @@ import type {
   FroniusInverterInfo,
   RawEnergyData,
   RawFroniusData,
-  SummarisedEnergyData,
+  SummarisedEnergyData
 } from '../types/Fronius'
 import { EnvironmentVariables } from './Constants'
 
 const initialFroniusData: FroniusData = {
   day: {
-    unit: `Wh`,
+    unit: `kWh`,
     value: 0,
   },
   current: {
-    unit: `W`,
+    unit: `kW`,
     value: 0,
   },
   total: {
-    unit: `Wh`,
+    unit: `kWh`,
     value: 0,
   },
   year: {
-    unit: `Wh`,
+    unit: `kWh`,
     value: 0,
   },
   capacity: 0,
@@ -59,22 +59,41 @@ class Fronius {
   }
 
   static summariseRealtimeData = (input: FroniusData[]): SummarisedEnergyData => ({
-    summary: input.reduce((acc, cur) => Object.keys(cur)
+    summary: input.reduce((acc, curInverter) => Object.keys(curInverter)
       .reduce((curAcc, key) => ({
         ...curAcc,
         ...(
           key === `capacity`
-            ? ({[key]: curAcc[key] + cur[key]})
+            ? ({[key]: (curAcc[key] + curInverter[key] / 1000)})
             : {
                 [key]: {
-                  unit: cur[key].unit,
-                  value: curAcc[key].value + cur[key].value,
+                  unit: (curInverter[key].unit === `W` ? `kW` : `kWh`),
+                  value: Number.parseFloat(
+                    ((curAcc[key].value + curInverter[key].value / 1000)).toFixed(2),
+                  ),
                 },
               }
         ),
       }), acc),
       initialFroniusData),
-    breakdown: input,
+    breakdown: input.map(inverter => Object.keys(inverter)
+        .reduce((acc, key) => ({
+          ...acc,
+          ...(
+            key === `capacity`
+            ? ({[key]: inverter[key] / 1000})
+            : {
+                [key]: {
+                  unit: (inverter[key].unit === `W` ? `kW` : `kWh`),
+                  value: Number.parseFloat(
+                    ((inverter[key].value) / 1000).toFixed(2),
+                  ),
+                },
+              }
+          ),
+        }),
+        initialFroniusData),
+    ),
   })
 
   static getDataFromInverter = async (

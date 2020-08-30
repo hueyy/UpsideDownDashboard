@@ -17,7 +17,7 @@ export interface RawFroniusData {
 }
 
 export interface EnergyData {
-  unit: `Wh` | `W`
+  unit: `kWh` | `kW` | `Wh` | `W`
   value: number
 }
 

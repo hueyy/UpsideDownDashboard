@@ -3,7 +3,7 @@ import useCurrentInverterData from '../../hooks/useCurrentInverterData'
 import './Dashboard.scss'
 
 const calculateCash = (price, value) => `$${
-  Math.round(price * value / 10) / 100
+  (price * value).toFixed(2)
 }`
 
 const Dashboard = () => {
@@ -23,7 +23,7 @@ const Dashboard = () => {
                 <p>
                   {inverterData.summary.current.value}{inverterData.summary.current.unit}
                   &nbsp;| {calculateCash(inverterData.price, inverterData.summary.current.value)}/h
-                  &nbsp;({Math.round(inverterData.summary.current.value / inverterData.summary.capacity * 1000) / 10}%)
+                  &nbsp;({(inverterData.summary.current.value / inverterData.summary.capacity * 100).toFixed(2)}%)
                 </p>
               </div>
               <div className="historical-stats">
@@ -62,7 +62,7 @@ const Dashboard = () => {
                         <p className="label">CURRENT</p>
                         <p>
                           {inverter.current.value}{inverter.current.unit}
-                          &nbsp;({Math.round(inverter.current.value / inverter.capacity * 1000) / 10}%)
+                          &nbsp;({(inverter.current.value / inverter.capacity * 100).toFixed(2)}%)
                         </p>
                       </div>
                       <div>
