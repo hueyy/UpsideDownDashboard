@@ -5,9 +5,10 @@ import type {
   FroniusInverterInfo,
   RawEnergyData,
   RawFroniusData,
-  SummarisedEnergyData
+  SummarisedEnergyData,
 } from '../types/Fronius'
 import { EnvironmentVariables } from './Constants'
+import Error from './Error'
 
 const initialFroniusData: FroniusData = {
   day: {
@@ -30,6 +31,53 @@ const initialFroniusData: FroniusData = {
 }
 
 class Fronius {
+  static defaultInverterInfo: FroniusInverterInfo = {
+    Body: {
+      Data: {
+        1: {
+          CustomName: ``,
+          DT: 0,
+          ErrorCode: 0,
+          PVPower: 0,
+          Show: 0,
+          StatusCode: 0,
+          UniqueID: ``,
+        },
+      },
+    },
+  }
+
+  static defaultRawFroniusData: RawFroniusData = {
+    Body: {
+      Data: {
+        DAY_ENERGY: {
+          Unit: `Wh`,
+          Values: {
+            1: 0,
+          },
+        },
+        PAC: {
+          Unit: `Wh`,
+          Values: {
+            1: 0,
+          },
+        },
+        TOTAL_ENERGY: {
+          Unit: `Wh`,
+          Values: {
+            1: 0,
+          },
+        },
+        YEAR_ENERGY: {
+          Unit: `Wh`,
+          Values: {
+            1: 0,
+          },
+        },
+      },
+    },
+  }
+
   static cleanEnergyData = (rawData: RawEnergyData): EnergyData => {
     const { Unit, Values } = rawData
     return {
@@ -96,13 +144,25 @@ class Fronius {
     ),
   })
 
+  static getRealtimeDataFromInverter = async (
+    inverterIp: string,
+  ): Promise<RawFroniusData> => {
+    try {
+      const { data } = await axios.get(
+        // eslint-disable-next-line no-secrets/no-secrets
+        `http://${inverterIp}/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System`,
+      )
+      return data
+    } catch (error) {
+      Error.captureError(error)
+      return Fronius.defaultRawFroniusData
+    }
+  }
+
   static getDataFromInverter = async (
     inverterIp: string,
   ): Promise<FroniusData> => {
-    const { data } = await axios.get(
-      // eslint-disable-next-line no-secrets/no-secrets
-      `http://${inverterIp}/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System`,
-    )
+    const data = await Fronius.getRealtimeDataFromInverter(inverterIp)
     const capacity = await Fronius.getInverterCapacity(inverterIp)
     return {
       ...Fronius.cleanRealtimeData(data),
@@ -122,11 +182,16 @@ class Fronius {
   }
 
   static getInverterInfo = async (inverterIp: string): Promise<FroniusInverterInfo> => {
-    const { data } = await axios.get(
-      // eslint-disable-next-line no-secrets/no-secrets
-      `http://${inverterIp}/solar_api/v1/GetInverterInfo.cgi`,
-    )
-    return data
+    try {
+      const { data } = await axios.get(
+        // eslint-disable-next-line no-secrets/no-secrets
+        `http://${inverterIp}/solar_api/v1/GetInverterInfo.cgi`,
+      )
+      return data
+    } catch (error) {
+      Error.captureError(error)
+      return Fronius.defaultInverterInfo
+    }
   }
 
   static getInverterCapacity = async (inverterIp: string): Promise<number> => {

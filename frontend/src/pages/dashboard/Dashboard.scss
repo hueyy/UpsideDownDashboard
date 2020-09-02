@@ -34,6 +34,11 @@
         margin-bottom: 0.5rem;
       }
 
+      > .error {
+        margin-bottom: 0.5rem;
+        color: red;
+      }
+
       > .data {
         display: grid;
         grid-template-columns: 1fr 1fr;
