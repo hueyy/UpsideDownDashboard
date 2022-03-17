@@ -1,7 +1,8 @@
-if(process.env.NODE_ENV !== `production`) {
+if (process.env.NODE_ENV !== `production`) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   require(`dotenv`).config()
 }
+import 'reflect-metadata'
 import fastify from 'fastify'
 import fastifyCors from 'fastify-cors'
 import Fronius from './lib/Fronius'
@@ -9,7 +10,7 @@ import Fronius from './lib/Fronius'
 const app = fastify({ logger: true })
 
 app.register(fastifyCors, {
-  
+
 })
 
 app.get(`/`, async (req, reply) => {

@@ -1,7 +1,7 @@
 import { QueryResult, useQuery } from 'react-query'
-import Api, { TransformedFroniusData } from '../lib/Api'
+import Api, { SummarisedEnergyData } from '../lib/Api'
 
-const useCurrentInverterData = (): QueryResult<TransformedFroniusData, Error> => useQuery(
+const useCurrentInverterData = (): QueryResult<SummarisedEnergyData, Error> => useQuery(
   `current-inverter`,
   Api.getInverterData,
   {

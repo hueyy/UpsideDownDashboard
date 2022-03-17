@@ -1,3 +1,3 @@
 export class EnvironmentVariables {
-  static API_URL = process.env.API_URL
+  static API_URL = process.env.GATSBY_API_URL
 }

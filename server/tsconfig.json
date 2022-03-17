@@ -2,6 +2,8 @@
   "compilerOptions": {
     "strict": false,
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*"

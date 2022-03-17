@@ -1,7 +1,7 @@
 
 module.exports = {
   plugins: [
-    `gatsby-plugin-scss-typescript`,
+    `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
