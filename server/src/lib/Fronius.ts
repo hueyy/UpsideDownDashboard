@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moize, { Options } from 'moize'
 import type {
   EnergyData,
   FroniusData,
@@ -28,6 +29,10 @@ const initialFroniusData: FroniusData = {
     value: 0,
   },
   capacity: 0,
+}
+
+const memoOptions: Options = {
+  maxAge: 300 // 5 minutes
 }
 
 class Fronius {
@@ -112,39 +117,39 @@ class Fronius {
         ...curAcc,
         ...(
           key === `capacity`
-            ? ({[key]: (curAcc[key] + curInverter[key] / 1000)})
+            ? ({ [key]: (curAcc[key] + curInverter[key] / 1000) })
             : {
-                [key]: {
-                  unit: (curInverter[key].unit === `W` ? `kW` : `kWh`),
-                  value: Number.parseFloat(
-                    ((curAcc[key].value + curInverter[key].value / 1000)).toFixed(2),
-                  ),
-                },
-              }
+              [key]: {
+                unit: (curInverter[key].unit === `W` ? `kW` : `kWh`),
+                value: Number.parseFloat(
+                  ((curAcc[key].value + curInverter[key].value / 1000)).toFixed(2),
+                ),
+              },
+            }
         ),
       }), acc),
       initialFroniusData),
     breakdown: input.map(inverter => Object.keys(inverter)
-        .reduce((acc, key) => ({
-          ...acc,
-          ...(
-            key === `capacity`
-            ? ({[key]: inverter[key] / 1000})
+      .reduce((acc, key) => ({
+        ...acc,
+        ...(
+          key === `capacity`
+            ? ({ [key]: inverter[key] / 1000 })
             : {
-                [key]: {
-                  unit: (inverter[key].unit === `W` ? `kW` : `kWh`),
-                  value: Number.parseFloat(
-                    ((inverter[key].value) / 1000).toFixed(2),
-                  ),
-                },
-              }
-          ),
-        }),
+              [key]: {
+                unit: (inverter[key].unit === `W` ? `kW` : `kWh`),
+                value: Number.parseFloat(
+                  ((inverter[key].value) / 1000).toFixed(2),
+                ),
+              },
+            }
+        ),
+      }),
         initialFroniusData),
     ),
   })
 
-  static getRealtimeDataFromInverter = async (
+  static getRealtimeDataFromInverter = moize(async (
     inverterIp: string,
   ): Promise<RawFroniusData> => {
     try {
@@ -157,7 +162,8 @@ class Fronius {
       Error.captureError(error)
       return Fronius.defaultRawFroniusData
     }
-  }
+  }, memoOptions)
+
 
   static getDataFromInverter = async (
     inverterIp: string,
@@ -169,7 +175,7 @@ class Fronius {
       capacity,
     }
   }
-  
+
   static getDataFromInverters = async (): Promise<SummarisedEnergyData> => {
     const data = await Promise.all(
       EnvironmentVariables.INVERTER_IPS
@@ -194,7 +200,7 @@ class Fronius {
     }
   }
 
-  static getInverterCapacity = async (inverterIp: string): Promise<number> => {
+  static getInverterCapacity = moize(async (inverterIp: string): Promise<number> => {
     const {
       Body: {
         Data: {
@@ -205,7 +211,7 @@ class Fronius {
       },
     } = await Fronius.getInverterInfo(inverterIp)
     return PVPower
-  }
+  }, memoOptions)
 
   static getAllInverterCapacity = async (): Promise<number[]> => {
     return await Promise.all(

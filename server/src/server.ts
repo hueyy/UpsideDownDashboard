@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== `production`) {
 }
 import 'reflect-metadata'
 import fastify from 'fastify'
-import fastifyCors from 'fastify-cors'
+import fastifyCors from '@fastify/cors'
 import Fronius from './lib/Fronius'
 
 const app = fastify({ logger: true })
@@ -23,7 +23,10 @@ app.get(`/data`, async (req, reply) => {
 
 const start = async () => {
   try {
-    await app.listen(3000, `::`)
+    await app.listen({
+      port: 3000,
+      host: `::`
+    })
   } catch (error) {
     app.log.error(error)
     process.exit(1)
